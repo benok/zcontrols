@@ -618,6 +618,7 @@ type
     procedure PaintItemValue(PItem: PPropItem; Index: Integer); virtual;
     procedure ChangeScale(M, D: Integer{$IF CompilerVersion >= 31}; isDpiChange: Boolean{$ENDIF}); override;
   public
+    procedure Invalidate; override;
     function SetPropValue(PropItem: PPropItem; var Value: TValue): Boolean;
     /// <summary> Update the Inspector .
     /// </summary>
@@ -2772,6 +2773,16 @@ begin
   Inc(Result.Left, w);
   if w > 0 then
     Inc(Result.Left, FSepTxtDis);
+end;
+
+procedure TzCustomObjInspector.Invalidate;
+begin
+  inherited;
+  if Assigned(FPropInspEdit) and FPropInspEdit.Visible then
+  begin
+    FPropInspEdit.UpdateEditText;
+    FPropInspEdit.Invalidate;
+  end;
 end;
 
 procedure TzCustomObjInspector.KeyDown(var Key: Word; Shift: TShiftState);
